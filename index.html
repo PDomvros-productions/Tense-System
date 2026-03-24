@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Tense System | Interactive Presentation</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Nunito:wght@400;700;800&display=swap");
+
+    :root {
+      --bg1: #050816;
+      --bg2: #10002b;
+      --card: rgba(15, 20, 54, 0.70);
+      --card-strong: rgba(34, 40, 96, 0.80);
+      --text: #f8fbff;
+      --muted: #d3ddff;
+      --ink: #08111f;
+      --blue: #3cf2ff;
+      --cyan: #bde0fe;
+      --mint: #62ffb0;
+      --lilac: #9d7bff;
+      --rose: #ff4fd8;
+      --yellow: #ffe45e;
+      --orange: #ff9f1c;
+      --danger: #ff3b30;
+      --shadow: 0 22px 55px rgba(0,0,0,0.48);
+      --glow-blue: 0 0 14px rgba(60,242,255,0.55);
+      --glow-pink: 0 0 18px rgba(255,79,216,0.45);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Nunito", "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(157,123,255,0.35), transparent 28%),
+        radial-gradient(circle at top right, rgba(60,242,255,0.28), transparent 24%),
+        radial-gradient(circle at bottom center, rgba(255,79,216,0.24), transparent 26%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      overflow: auto;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      min-height: 100vh;
+      height: auto;
+      padding: 8px 10px 56px;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      min-height: calc(100vh - 60px);
+      height: auto;
+      border-radius: 30px;
+      background: linear-gradient(160deg, rgba(20,25,70,0.88), rgba(10,13,38,0.82));
+      border: 1px solid rgba(60,242,255,0.28);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255,79,216,0.12), 0 0 28px rgba(60,242,255,0.10);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 18px 20px 20px;
+      overflow: visible;
+    }
+
+    .slide.active { display: block; animation: fadeIn 0.45s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      padding-right: 88px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(60,242,255,0.15), rgba(255,79,216,0.16));
+      border: 1px solid rgba(60,242,255,0.30);
+      border-radius: 999px;
+      padding: 6px 12px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      box-shadow: var(--glow-blue);
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 8px;
+      line-height: 1.1;
+      font-family: "Orbitron", "Arial Black", sans-serif;
+      letter-spacing: 0.03em;
+      text-shadow: 0 0 14px rgba(60,242,255,0.20), 0 0 24px rgba(255,79,216,0.18);
+    }
+
+    h1 { font-size: clamp(2.5rem, 5vw, 4.8rem); margin-bottom: 10px; }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.8rem); margin-bottom: 10px; }
+    h3 { font-size: clamp(1.05rem, 1.7vw, 1.4rem); }
+
+    p, li {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.45;
+      margin: 0 0 8px;
+    }
+
+    ul { margin: 0; padding-left: 20px; }
+    strong { color: #fff; }
+    .example em { font-style: normal; color: #fff; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .titlebox p { max-width: 850px; font-size: clamp(1.08rem, 1.35vw, 1.3rem); }
+
+    .hero-visual, .stack {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .slide-intro .hero-visual { margin-top: clamp(20px, 3vw, 40px); }
+
+    .pillrow, .mini-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--ink);
+      background: linear-gradient(90deg, var(--yellow), #fff7a8);
+      box-shadow: 0 0 18px rgba(255,228,94,0.35);
+    }
+
+    .visual-card, .card, .formula, .timeline-card, .legend-card, .compare-card, .pair-card, .summary-card {
+      background: var(--card);
+      border: 1px solid rgba(60,242,255,0.18);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(255,79,216,0.10);
+    }
+
+    .visual-card.big {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(145deg, rgba(157,123,255,0.22), rgba(60,242,255,0.18));
+    }
+
+    .grid-2, .grid-3, .grid-4, .memory-map, .compare-grid, .timeline-wrap {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .memory-map { grid-template-columns: repeat(5, minmax(0,1fr)); }
+    .compare-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .timeline-wrap { grid-template-columns: repeat(2, minmax(0,1fr)); }
+
+    .concept-box {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: stretch;
+      margin-top: 12px;
+    }
+
+    .concept-side {
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(24, 30, 76, 0.75);
+      border: 1px solid rgba(60,242,255,0.18);
+    }
+
+    .condition { box-shadow: inset 0 0 0 2px rgba(114,221,247,0.35), 0 0 20px rgba(114,221,247,0.08); }
+    .result { box-shadow: inset 0 0 0 2px rgba(184,242,230,0.35), 0 0 20px rgba(184,242,230,0.08); }
+    .arrow {
+      display: grid;
+      place-items: center;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--yellow);
+    }
+
+    .formula {
+      background: linear-gradient(145deg, rgba(31,40,104,0.88), rgba(14,20,58,0.82));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .tag.present { background: linear-gradient(90deg, #dff7ff, #bde0fe); }
+    .tag.past { background: linear-gradient(90deg, #f9e7ff, #d7c8ff); }
+    .tag.future { background: linear-gradient(90deg, #fff3d6, #ffcf99); }
+    .tag.warning { background: linear-gradient(90deg, #ffe1e4, #ffc8dd); }
+    .tag.summary { background: linear-gradient(90deg, #e4ffef, #b8f2e6); }
+
+    .example {
+      font-size: 1.02rem;
+      color: var(--yellow);
+      background: rgba(0,0,0,0.16);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+
+
+    .situation-card {
+      position: relative;
+      padding-bottom: 92px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .situation-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,79,216,0.42);
+      box-shadow: 0 0 24px rgba(255,79,216,0.14);
+    }
+
+    .situation-title {
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .reveal-btn, .small-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+      background: linear-gradient(90deg, var(--rose), var(--yellow));
+      color: #07101c;
+      box-shadow: var(--glow-pink);
+    }
+
+    .reveal-btn:hover, .small-btn:hover { transform: scale(1.03); }
+
+    .slide-lang-tools {
+      display: flex;
+      justify-content: flex-end;
+      margin: 10px 0 2px;
+    }
+
+
+    .flip-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .scenario-card {
+      position: relative;
+      padding-bottom: 96px;
+      cursor: pointer;
+    }
+
+    .use-line {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #fff;
+      font-size: 0.98rem;
+      line-height: 1.35;
+    }
+
+    .use-line strong { color: var(--yellow); }
+
+    .practice-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(17, 24, 66, 0.72);
+      border: 1px solid rgba(60,242,255,0.18);
+    }
+
+    .practice-tools p { margin: 0; }
+
+    .reveal {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      display: none;
+      background: rgba(6,9,26,0.88);
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid rgba(60,242,255,0.18);
+      color: #fff;
+    }
+
+    .reveal.show { display: block; }
+
+    .memory-item {
+      padding: 14px 12px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.14);
+      text-align: center;
+      min-height: 0;
+    }
+
+    .memory-item .icon {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .time-chip {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(60,242,255,0.18);
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .line {
+      position: relative;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(8, 12, 42, 0.55);
+      overflow: hidden;
+    }
+
+    .fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: 999px;
+    }
+
+    .line-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 6px;
+      gap: 8px;
+    }
+
+    .mini-note {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: linear-gradient(90deg, rgba(60,242,255,0.10), rgba(255,79,216,0.10));
+      border: 1px solid rgba(60,242,255,0.22);
+    }
+
+    .pair-card {
+      display: grid;
+      gap: 8px;
+      height: 100%;
+    }
+
+    .pair-card .left {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .label-line {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      margin-bottom: 6px;
+      color: #07101c;
+      background: linear-gradient(90deg, var(--yellow), #fff7a8);
+    }
+
+    .summary-list li { margin-bottom: 10px; }
+
+    .logo-corner {
+      position: fixed;
+      top: 8px;
+      right: 12px;
+      width: min(86px, 12vw);
+      z-index: 30;
+      filter: drop-shadow(0 0 10px rgba(60,242,255,0.34)) drop-shadow(0 0 18px rgba(255,79,216,0.16));
+    }
+
+    .global-footer {
+      position: fixed;
+      left: 50%;
+      bottom: 42px;
+      transform: translateX(-50%);
+      z-index: 20;
+      max-width: calc(100vw - 26px);
+      text-align: center;
+      font-size: 0.7rem;
+      color: #f6f6ff;
+      letter-spacing: 0.03em;
+      background: rgba(68, 86, 136, 0.42);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      padding: 4px 10px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .nav {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .nav-center {
+      flex: 0 0 auto;
+      min-width: 74px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(68, 86, 136, 0.42);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .nav-btn {
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      padding: 10px 16px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.20), rgba(189,224,254,0.20));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.22);
+      min-width: 94px;
+      box-shadow: var(--glow-blue);
+      transition: transform 0.15s ease;
+    }
+
+    .nav-btn:hover { transform: scale(1.03); }
+
+    .slide-welcome {
+      position: relative;
+      padding-top: 24px;
+    }
+
+    .welcome-shell {
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .welcome-hero {
+      text-align: center;
+      padding: 6px 110px 0 26px;
+    }
+
+    .welcome-hero h1 {
+      font-size: clamp(1.95rem, 3.5vw, 3.35rem);
+      margin-bottom: 6px;
+    }
+
+    .welcome-image-card {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .welcome-image {
+      display: block;
+      width: min(100%, 92%);
+      max-height: calc(100vh - 220px);
+      min-height: 320px;
+      object-fit: contain;
+      object-position: center top;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      margin: 0 auto;
+      background: transparent;
+    }
+
+    @media (max-width: 1100px) {
+      .hero, .grid-2, .grid-3, .grid-4, .memory-map, .compare-grid, .timeline-wrap, .flip-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .memory-map { grid-template-columns: 1fr 1fr 1fr; }
+      .hero { grid-template-columns: 1fr; }
+      .slide-intro .hero-visual { margin-top: 24px; }
+    }
+
+    @media (max-width: 760px) {
+      .deck { min-height: 100vh; padding-bottom: 84px; }
+      .slide { min-height: calc(100vh - 96px); padding: 14px 14px 18px; }
+      h1 { font-size: clamp(2rem, 10vw, 3.2rem); }
+      h2 { font-size: clamp(1.55rem, 6.8vw, 2.15rem); }
+      h3 { font-size: clamp(1.05rem, 5vw, 1.25rem); }
+      p, li { font-size: 1rem; }
+      .grid-2, .grid-3, .grid-4, .memory-map, .compare-grid, .timeline-wrap, .concept-box, .flip-grid {
+        grid-template-columns: 1fr;
+      }
+      .concept-box { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); }
+      .nav { left: 8px; right: 8px; }
+      .nav-btn { min-width: 74px; font-size: 0.88rem; padding: 8px 12px; }
+      .topline { padding-right: 0; }
+      .logo-corner { width: 62px; top: 8px; right: 8px; }
+      .global-footer { bottom: 34px; font-size: 0.56rem; }
+      .slide-intro .hero-visual { margin-top: 18px; }
+      .welcome-hero { padding: 0 78px 0 8px; text-align: left; }
+      .welcome-hero h1 { font-size: clamp(1.7rem, 6.2vw, 2.6rem); }
+      .welcome-image { width: min(100%, 96%); max-height: none; min-height: 240px; aspect-ratio: 16 / 9; object-fit: contain; border: none; box-shadow: none; background: transparent; }
+    }
+
+    @media (max-width: 560px) {
+      .welcome-hero { padding-right: 62px; }
+      .welcome-image-card { padding: 0; border-radius: 0; background: transparent; border: none; box-shadow: none; }
+      .welcome-image { width: 100%; border-radius: 0; min-height: 190px; object-fit: contain; border: none; box-shadow: none; background: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <img src="logo.png" alt="Panagiotis Domvros EFL Hub logo" class="logo-corner">
+
+    <section class="slide active slide-welcome">
+      <div class="welcome-shell">
+        <div class="welcome-hero">
+          <h1>The Tense System</h1>
+        </div>
+        <div class="welcome-image-card">
+          <img src="image.png" alt="Welcome illustration" class="welcome-image">
+        </div>
+      </div>
+    </section>
+
+    
+    <section class="slide slide-intro">
+      <div class="topline"></div>
+      <div class="hero">
+        <div class="titlebox">
+          <h1>The Tense System</h1>
+          <div class="pillrow">
+                        <span class="pill" style="background:linear-gradient(90deg,#dff7ff,#bde0fe);">Present Time</span>
+            <span class="pill" style="background:linear-gradient(90deg,#f9e7ff,#d7c8ff);">Past Time</span>
+            <span class="pill" style="background:linear-gradient(90deg,#fff3d6,#ffcf99);">Future Time</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="visual-card big">
+            <div>
+              <h2>Three time zones 🕒</h2>
+              <p>Present, past, and future forms each answer a different meaning question.</p>
+            </div>
+          </div>
+          <div class="grid-3">
+            <div class="visual-card">
+              <h3>Present</h3>
+              <p>habit, action now, result, duration</p>
+            </div>
+            <div class="visual-card">
+              <h3>Past</h3>
+              <p>story, background action, past before past</p>
+            </div>
+            <div class="visual-card">
+              <h3>Future</h3>
+              <p>prediction, intention, arrangement, completion</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">1 / Foundations</div>
+        <div class="badge">State and Dynamic Verbs</div>
+      </div>
+      <h2>State and dynamic verbs</h2>
+      <div class="concept-box">
+        <div class="concept-side condition">
+          <h3>State verbs</h3>
+          <p>A state verb describes a <strong>condition</strong> or an <strong>existence</strong>.</p>
+          <div class="example"><em>be, hate, like</em></div>
+        </div>
+        <div class="arrow">↔</div>
+        <div class="concept-side result">
+          <h3>Dynamic verbs</h3>
+          <p>A dynamic verb describes an <strong>action</strong> or event.</p>
+          <div class="example"><em>do, play, jump</em></div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:12px;">
+        <div class="card">
+          <h3>Key idea</h3>
+          <p>State verbs normally describe what someone <strong>is</strong>, <strong>has</strong>, <strong>feels</strong>, or <strong>thinks</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Key idea</h3>
+          <p>Dynamic verbs normally describe what someone <strong>does</strong> or what is <strong>happening</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Why it matters</h3>
+          <p>This distinction helps explain why some verbs are rarely used in the progressive form.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">2 / Present Time</div>
+        <div class="badge">At a glance</div>
+      </div>
+      <h2>Present time: four core forms</h2>
+      <div class="memory-map">
+        <div class="memory-item">
+          <span class="icon">🔁</span>
+          <h3>Present Simple</h3>
+          <p>habits, states, truths, timetables</p>
+          <div class="time-chip">regular / general</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">⚡</span>
+          <h3>Present Progressive</h3>
+          <p>temporary or unfinished action</p>
+          <div class="time-chip">now / around now</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">✅</span>
+          <h3>Present Perfect Simple</h3>
+          <p>past action linked to now</p>
+          <div class="time-chip">result / experience</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">⏳</span>
+          <h3>Present Perfect Progressive</h3>
+          <p>activity continuing until now</p>
+          <div class="time-chip">duration / activity</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">🎯</span>
+          <h3>Main question</h3>
+          <p>Are we talking about truth, action, result, or duration?</p>
+          <div class="time-chip">meaning decides</div>
+        </div>
+      </div>
+</section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">3 / Present Time</div>
+        <div class="badge">Simple vs Progressive</div>
+      </div>
+      <h2>Present simple and present progressive</h2>
+      <div class="grid-2">
+        <div class="formula">
+          <span class="tag present">Present Simple</span>
+          <h3>Use it for habits, states, truths, and programmes</h3>
+          <div class="example"><em>I take the bus to work every day.</em> - habitual action</div>
+          <div class="example"><em>He lives in England.</em> - state</div>
+          <div class="example"><em>Water boils at 100 degrees Centigrade.</em> - eternal truth</div>
+          <div class="example"><em>Lessons start at 9:00 a.m.</em> - timetable</div>
+        </div>
+        <div class="formula">
+          <span class="tag present">Present Progressive</span>
+          <h3>Use it for temporary, unfinished, or repeated limited action</h3>
+          <div class="example"><em>I’m washing my face at the moment.</em> - temporary short action</div>
+          <div class="example"><em>I’m reading “Wuthering Heights.”</em> - unfinished action</div>
+          <div class="example"><em>I’m visiting a gym nowadays.</em> - repeated temporary action</div>
+          <div class="example"><em>He’s always telling me what to do.</em> - annoying habit</div>
+          <div class="example"><em>Whenever I visit him, he’s working.</em> - repeated action within limits</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">4 / Present Time</div>
+        <div class="badge">Perfect Forms</div>
+      </div>
+      <h2>Present perfect simple and progressive</h2>
+      <div class="grid-2">
+        <div class="formula">
+          <span class="tag present">Present Perfect Simple</span>
+          <h3>Past action or state with a present connection</h3>
+          <div class="example"><em>I’ve known them for ages.</em> - state lasting until now</div>
+          <div class="example"><em>I’ve seen that film.</em> - indefinite event in the past</div>
+          <div class="example"><em>She’s called ten times this week.</em> - repeated action until now</div>
+          <div class="example"><em>He’s broken his arm.</em> - the result is still obvious</div>
+        </div>
+        <div class="formula">
+          <span class="tag present">Present Perfect Progressive</span>
+          <h3>Duration or visible recent activity</h3>
+          <div class="example"><em>It’s been raining hard all day.</em> - activity that started in the past and is still happening</div>
+          <div class="example"><em>Have you been working in the garden?</em> - activity that only stopped a while ago but has an obvious result</div>
+          <div class="example"><em>How long have you been seeing this doctor?</em> - repeated activity at certain times</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:12px;">
+        <div class="card">
+          <h3>Simple perfect focuses on...</h3>
+          <p>the <strong>fact</strong>, the <strong>experience</strong>, or the <strong>result</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Perfect progressive focuses on...</h3>
+          <p>the <strong>activity</strong>, the <strong>process</strong>, or the <strong>duration</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">5 / Present Time</div>
+        <div class="badge">Simple or Progressive?</div>
+      </div>
+      <h2>Verbs that are hardly ever used in the progressive</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>The verb <em>be</em></h3>
+          <p>Usually not progressive in its normal state meaning.</p>
+        </div>
+        <div class="card">
+          <h3>Emotion</h3>
+          <p><em>like, dislike, wish, desire, care</em></p>
+        </div>
+        <div class="card">
+          <h3>Thinking</h3>
+          <p><em>feel</em> (= believe), <em>know, realise, believe, suppose, mean, remember, mind, see</em> (= understand)</p>
+        </div>
+        <div class="card">
+          <h3>Possession</h3>
+          <p><em>own, belong, have</em> (= possess)</p>
+        </div>
+        <div class="card">
+          <h3>Senses</h3>
+          <p><em>see, hear, sound, smell, notice, recognise</em></p>
+        </div>
+        <div class="card">
+          <h3>Other common verbs</h3>
+          <p><em>seem, appear, look</em> (= seem), <em>cost, want</em></p>
+        </div>
+      </div>
+      <div class="mini-note">
+        To emphasise that the action is temporary, we can sometimes use <strong>can</strong> with these verbs:
+        <div class="example" style="margin-top:10px;"><em>I can see you now.</em></div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">6 / Present Time</div>
+        <div class="badge">Meaning Changes</div>
+      </div>
+      <h2>Some verbs can be progressive with a change of meaning</h2>
+      <div class="compare-grid">
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">State meaning</span>
+            <p><strong>Eric is stupid.</strong><br>All the time.</p>
+          </div>
+          <div class="left">
+            <span class="label-line">Progressive meaning</span>
+            <p><strong>Eric is being stupid about the whole situation.</strong><br>At the moment.</p>
+          </div>
+        </div>
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">State meaning</span>
+            <p><strong>What do you think about the new student?</strong><br>What is your opinion?</p>
+          </div>
+          <div class="left">
+            <span class="label-line">Progressive meaning</span>
+            <p><strong>What are you thinking about?</strong><br>What is going on in your mind now?</p>
+          </div>
+        </div>
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">State meaning</span>
+            <p><strong>This soup tastes great.</strong><br>A characteristic of the soup.</p>
+          </div>
+          <div class="left">
+            <span class="label-line">Progressive meaning</span>
+            <p><strong>He’s tasting the soup to see if it needs more salt.</strong><br>Actually putting soup in his mouth.</p>
+          </div>
+        </div>
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">State meaning</span>
+            <p><strong>The flowers smell nice.</strong><br>A characteristic of the flowers.</p>
+          </div>
+          <div class="left">
+            <span class="label-line">Progressive meaning</span>
+            <p><strong>The dog is smelling him.</strong><br>Actually doing it.</p>
+          </div>
+        </div>
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">State meaning</span>
+            <p><strong>I don’t see what you mean.</strong><br>Understand.</p>
+          </div>
+          <div class="left">
+            <span class="label-line">Progressive meaning</span>
+            <p><strong>I’m seeing my doctor next week.</strong><br>Meeting.</p>
+          </div>
+        </div>
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">Watch out</span>
+            <p>Remember to check the spelling rules and keep the meaning in focus.</p>
+          </div>
+          <div class="left">
+            <span class="label-line">Also remember</span>
+            <p><strong>He’s been to Paris</strong> = he visited it before.<br><strong>He’s gone to Paris</strong> = he is there now.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mini-note">
+        <strong>Passive note:</strong> the <strong>Present Perfect Progressive</strong> is not used in the passive voice.
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">7 / Past Time</div>
+        <div class="badge">At a glance</div>
+      </div>
+      <h2>Past time: five key choices</h2>
+      <div class="memory-map">
+        <div class="memory-item">
+          <span class="icon">📍</span>
+          <h3>Past Simple</h3>
+          <p>finished events, stories, and past habits</p>
+          <div class="time-chip">finished past</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">🎬</span>
+          <h3>Past Progressive</h3>
+          <p>background action or action in progress</p>
+          <div class="time-chip">in progress then</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">🔁</span>
+          <h3>Used to / Would</h3>
+          <p>repeated past behaviour and old routines</p>
+          <div class="time-chip">past habit</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">⏮️</span>
+          <h3>Past Perfect Simple</h3>
+          <p>an earlier past action before another past point</p>
+          <div class="time-chip">past before past</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">⏳</span>
+          <h3>Past Perfect Progressive</h3>
+          <p>earlier past activity with duration or visible result</p>
+          <div class="time-chip">duration before past</div>
+        </div>
+      </div>
+</section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">8 / Past Time</div>
+        <div class="badge">Main Contrasts</div>
+      </div>
+      <h2>Past time: the main contrasts</h2>
+      <div class="grid-3">
+        <div class="formula">
+          <span class="tag past">Past Simple</span>
+          <div class="example"><em>I usually worked from 9 to 5.</em> - past habit</div>
+          <div class="example"><em>All of a sudden she walked out of the room.</em> - telling a story</div>
+        </div>
+        <div class="formula">
+          <span class="tag past">Past Progressive</span>
+          <div class="example"><em>While he was typing his report, it started raining heavily.</em> - longer action with a sudden event</div>
+          <div class="example"><em>While I was doing my homework, my sister was fixing her bike.</em> - two simultaneous actions</div>
+          <div class="example"><em>He was always complaining about money.</em> - annoying habit</div>
+        </div>
+        <div class="formula">
+          <span class="tag past">Used to / Would</span>
+          <div class="example"><em>I used to walk to work when I lived downtown.</em> - past habit</div>
+          <div class="example"><em>She used to like to stay out till late.</em> - past habitual state</div>
+          <div class="example"><em>After dinner we would open our presents...</em> - repeated past event in reminiscence</div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:12px;">
+        <div class="formula">
+          <span class="tag past">Past Perfect Simple</span>
+          <div class="example"><em>When I got to the station the train had already left.</em> - past before past</div>
+        </div>
+        <div class="formula">
+          <span class="tag past">Past Perfect Progressive</span>
+          <div class="example"><em>He felt sick because he had been drinking all night.</em> - past before past with emphasis on duration</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">9 / Past Time</div>
+        <div class="badge">Watch Outs</div>
+      </div>
+      <h2>Past time watch outs</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Past Progressive</h3>
+          <p>It is <strong>not used to describe habitual events or states in the past</strong>. Use <strong>used to</strong> for that purpose.</p>
+        </div>
+        <div class="card">
+          <h3>Used to</h3>
+          <p><strong>Used to</strong> exists only in the past and can be replaced by the simple past.</p>
+        </div>
+        <div class="card">
+          <h3>Would</h3>
+          <p><strong>Would</strong> is used for <strong>habitual events</strong>, especially when we reminisce. It is <strong>not used for habitual states</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Passive note</h3>
+          <p>The <strong>Past Perfect Progressive</strong> is not used in the passive.</p>
+        </div>
+      </div>
+      <div class="compare-grid" style="margin-top:12px;">
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">Possible</span>
+            <p><strong>I used to ride a bicycle.</strong><br><strong>I would ride a bicycle, whenever I had the chance.</strong></p>
+          </div>
+          <div class="left">
+            <span class="label-line">Not possible</span>
+            <p><strong>She used to be a famous opera singer.</strong><br><strong>She would be a famous opera singer.</strong> - state</p>
+          </div>
+        </div>
+        <div class="pair-card">
+          <div class="left">
+            <span class="label-line">Contrast with the present</span>
+            <p><strong>I used to / would play football, but now I don’t.</strong></p>
+          </div>
+          <div class="left">
+            <span class="label-line">Reason</span>
+            <p>The present contrast <strong>now I don’t</strong> makes <strong>would</strong> impossible there.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">10 / Future Time</div>
+        <div class="badge">At a glance</div>
+      </div>
+      <h2>Future time: five key choices</h2>
+      <div class="memory-map">
+        <div class="memory-item">
+          <span class="icon">🔮</span>
+          <h3>Will</h3>
+          <p>prediction, promise, offer, or instant decision</p>
+          <div class="time-chip">speaker decides now</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">🧭</span>
+          <h3>Going to</h3>
+          <p>prior intention or prediction from present evidence</p>
+          <div class="time-chip">plan / evidence</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">📅</span>
+          <h3>Present Progressive</h3>
+          <p>future arrangement already fixed</p>
+          <div class="time-chip">arranged future</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">⏩</span>
+          <h3>Future Progressive</h3>
+          <p>action in progress at a future time</p>
+          <div class="time-chip">in progress later</div>
+        </div>
+        <div class="memory-item">
+          <span class="icon">🏁</span>
+          <h3>Future Perfect</h3>
+          <p>action completed by a future point or duration up to then</p>
+          <div class="time-chip">by then</div>
+        </div>
+      </div>
+</section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">11 / Future Time</div>
+        <div class="badge">Main Forms</div>
+      </div>
+      <h2>Future time forms</h2>
+      <div class="grid-2">
+        <div class="formula">
+          <span class="tag future">“will” Future</span>
+          <div class="example"><em>I’ll probably pass the exam.</em> - prediction</div>
+          <div class="example"><em>That’ll be John at the door.</em> - assumption</div>
+          <div class="example"><em>I’ll buy this one.</em> - immediate decision</div>
+          <div class="example"><em>I’ll give you the money you need.</em> - promise</div>
+          <div class="example"><em>I’ll do it for you if you like.</em> - offer of help</div>
+        </div>
+        <div class="formula">
+          <span class="tag future">“going to” Future</span>
+          <div class="example"><em>I’m going to visit my grandmother.</em> - intention / plan already made</div>
+          <div class="example"><em>Clouds are gathering. It’s going to rain.</em> - prediction based on present evidence</div>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:12px;">
+        <div class="formula">
+          <span class="tag future">Present Progressive as Future</span>
+          <div class="example"><em>I’m visiting the doctor tomorrow.</em> - fixed arrangement</div>
+        </div>
+        <div class="formula">
+          <span class="tag future">Future Progressive</span>
+          <div class="example"><em>I’ll be working on my essay.</em> - action in progress at a future point</div>
+          <div class="example"><em>I’ll be needing it for my work next week.</em> - action that will happen anyway</div>
+          <div class="example"><em>This time next year she will be studying in England.</em> - fixed arrangement or plan</div>
+        </div>
+        <div class="formula">
+          <span class="tag future">Future Perfect</span>
+          <div class="example"><em>By next month, I will have finished the book.</em> - completed by a future time</div>
+          <div class="example"><em>At the end of summer, I will have been working with them for three years.</em> - emphasis on process or duration</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">12 / Future Time</div>
+        <div class="badge">Watch Outs</div>
+      </div>
+      <h2>Future time watch outs</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>No future form after time words or <em>if</em></h3>
+          <p>When we want to show future time, we use the <strong>Present</strong> or the <strong>Present Perfect</strong>, not <strong>will</strong>.</p>
+          <div class="example"><em>When I have finished my work, I’ll come.</em></div>
+          <div class="example"><em>If I see him tomorrow, I’ll tell him.</em></div>
+        </div>
+        <div class="card">
+          <h3>Future in the past</h3>
+          <p>We often use <strong>was / were going to</strong> for something intended in the past that did not happen.</p>
+          <div class="example"><em>I was going to visit my aunt yesterday but something happened and I didn’t.</em></div>
+        </div>
+        <div class="card">
+          <h3>“Going to” vs Present Progressive</h3>
+          <div class="example"><em>I’m visiting Sue tomorrow.</em> - the speaker simply states the future action</div>
+          <div class="example"><em>I’m going to visit Sue tomorrow.</em> - the speaker shows the wish or intention for it to happen</div>
+        </div>
+        <div class="card">
+          <h3>“Will” or “Going to”?</h3>
+          <div class="example"><em>We have run out of milk. I know. I’m going to get some.</em> - decision made before speaking</div>
+          <div class="example"><em>We have run out of milk. Really? I’ll get some.</em> - decision made at the moment of speaking</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">13 / Practice</div>
+        <div class="badge">Scenario set 1</div>
+      </div>
+      <h2>Scenario practice 1</h2>
+      <div class="practice-tools">
+        <p>Choose the best tense, say the full sentence aloud, then flip the card to check.</p>
+        <button class="small-btn" onclick="shufflePracticeCards('practiceFlipGrid1')">Shuffle cards</button>
+      </div>
+      <div class="flip-grid" id="practiceFlipGrid1">
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">1. Monday routine</div>
+          <p>Every Monday, there ar piano lessons for Ella after school.</p>
+          <div class="use-line"><strong>Use:</strong> go</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Simple.<div class="example" style="margin-top:8px;"><em>Ella goes to piano lessons every Monday.</em> - habit / routine</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">2. Right now</div>
+          <p>I can't come out now because I am in the middle of my homework.</p>
+          <div class="use-line"><strong>Use:</strong> do</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Progressive.<div class="example" style="margin-top:8px;"><em>I’m doing my homework now.</em> - action in progress at the moment</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">3. Life experience</div>
+          <p>Maria knows Madrid well because she lived there for three years and that experience matters now.</p>
+          <div class="use-line"><strong>Use:</strong> live</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Perfect Simple.<div class="example" style="margin-top:8px;"><em>Maria has lived in Madrid for three years.</em> - duration up to now / present relevance</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">4. Background action</div>
+          <p>When we arrived home, Dad was in the kitchen in the middle of making dinner.</p>
+          <div class="use-line"><strong>Use:</strong> cook</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Past Progressive.<div class="example" style="margin-top:8px;"><em>Dad was cooking when we arrived.</em> - background action in progress in the past</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">5. Visible evidence</div>
+          <p>Look at those black clouds. The prediction comes from what we can see now.</p>
+          <div class="use-line"><strong>Use:</strong> rain</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Going to Future.<div class="example" style="margin-top:8px;"><em>It’s going to rain.</em> - prediction based on present evidence</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">6. By next June</div>
+          <p>The bridge project will be complete before next June arrives.</p>
+          <div class="use-line"><strong>Use:</strong> finish</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Future Perfect.<div class="example" style="margin-top:8px;"><em>They will have finished the bridge by next June.</em> - completion by a future time</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">14 / Practice</div>
+        <div class="badge">Scenario set 2</div>
+      </div>
+      <h2>Scenario practice 2</h2>
+      <div class="practice-tools">
+        <p>Focus on meaning first: duration, arrangement, earlier past, state verb, habit, or future time clause.</p>
+        <button class="small-btn" onclick="shufflePracticeCards('practiceFlipGrid2')">Shuffle cards</button>
+      </div>
+      <div class="flip-grid" id="practiceFlipGrid2">
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">1. Cause before past result</div>
+          <p>He felt exhausted because the drinking started earlier and continued for hours before that moment in the past.</p>
+          <div class="use-line"><strong>Use:</strong> drink</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Past Perfect Progressive.<div class="example" style="margin-top:8px;"><em>He felt sick because he had been drinking all night.</em> - earlier past cause with emphasis on duration</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">2. Fixed arrangement</div>
+          <p>We already have an appointment tomorrow at ten.</p>
+          <div class="use-line"><strong>Use:</strong> see</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Progressive for future arrangement.<div class="example" style="margin-top:8px;"><em>We’re seeing the doctor tomorrow at ten.</em> - arranged future</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">3. Repeated experience</div>
+          <p>This is the third time I watch this film.</p>
+          <div class="use-line"><strong>Use:</strong> see</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Perfect Simple.<div class="example" style="margin-top:8px;"><em>I’ve seen this film three times.</em> - repeated experience up to now</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">4. Past habit</div>
+          <p>Grandma had a regular old habit: she sat by the window and read there every afternoon.</p>
+          <div class="use-line"><strong>Use:</strong> sit / read</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Used to.<div class="example" style="margin-top:8px;"><em>Grandma used to sit by the window and read every afternoon.</em> - past habit / repeated past action</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">5. State</div>
+          <p>You already have the answer in your mind.</p>
+          <div class="use-line"><strong>Use:</strong> know</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Simple with a state verb.<div class="example" style="margin-top:8px;"><em>I know the answer.</em> - state, not progressive</div></div>
+        </div>
+        <div class="card situation-card scenario-card">
+          <div class="situation-title">6. Future time clause</div>
+          <p>First I will finish the work. After that, I will call you.</p>
+          <div class="use-line"><strong>Use:</strong> finish / call - Remember: after <em>when</em>, English does not use <em>will</em>.</div>
+          <button class="reveal-btn" onclick="toggleReveal(this)">Flip card</button>
+          <div class="reveal"><strong>Best fit:</strong> Present Perfect after a time word.<div class="example" style="margin-top:8px;"><em>When I have finished my work, I’ll call you.</em> - future meaning after a time word without <em>will</em></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="topline">
+        <div class="badge">15 / Recap</div>
+        <div class="badge">Whole System</div>
+      </div>
+      <h2>The tense system in one detailed view</h2>
+      <div class="slide-lang-tools">
+        <button class="small-btn" type="button" onclick="toggleGreekFunctions(this)" aria-pressed="false">Show functions in Greek</button>
+      </div>
+      <div class="grid-3">
+        <div class="timeline-card">
+          <h3>Present Time</h3>
+          <div class="line"><div class="fill" style="width:100%; background:linear-gradient(90deg,#dff7ff,#72ddf7);"></div></div>
+          <div class="line-labels"><span>general truth</span><span>action now</span><span>result / duration now</span></div>
+          <div class="mini-note" style="margin-top:12px;">
+            <p><strong>Present Simple</strong> - <span class="fn-text" data-en="habits, routines, states, truths, timetables" data-el="συνήθειες, ρουτίνες, καταστάσεις, αλήθειες, προγράμματα">habits, routines, states, truths, timetables</span></p>
+            <p><strong>Present Progressive</strong> - <span class="fn-text" data-en="temporary action, action now, annoying habit" data-el="προσωρινή δράση, ενέργεια τώρα, ενοχλητική συνήθεια">temporary action, action now, annoying habit</span></p>
+            <p><strong>Present Perfect Simple</strong> - <span class="fn-text" data-en="experience, result, repeated action up to now" data-el="εμπειρία, αποτέλεσμα, επαναλαμβανόμενη ενέργεια μέχρι τώρα">experience, result, repeated action up to now</span></p>
+            <p><strong>Present Perfect Progressive</strong> - <span class="fn-text" data-en="duration, process, recent visible activity" data-el="διάρκεια, εξέλιξη, πρόσφατη ορατή δραστηριότητα">duration, process, recent visible activity</span></p>
+          </div>
+        </div>
+        <div class="timeline-card">
+          <h3>Past Time</h3>
+          <div class="line"><div class="fill" style="width:100%; background:linear-gradient(90deg,#f9e7ff,#d7c8ff);"></div></div>
+          <div class="line-labels"><span>habit / story</span><span>background action</span><span>past before past</span></div>
+          <div class="mini-note" style="margin-top:12px;">
+            <p><strong>Past Simple</strong> - <span class="fn-text" data-en="finished event, story step, past habit" data-el="ολοκληρωμένο γεγονός, βήμα στην αφήγηση, συνήθεια στο παρελθόν">finished event, story step, past habit</span></p>
+            <p><strong>Past Progressive</strong> - <span class="fn-text" data-en="background scene, longer action in progress, parallel action" data-el="σκηνικό στο παρασκήνιο, πιο μακρά ενέργεια σε εξέλιξη, παράλληλη ενέργεια">background scene, longer action in progress, parallel action</span></p>
+            <p><strong>Used to / Would</strong> - <span class="fn-text" data-en="repeated past behaviour; would not for states" data-el="επαναλαμβανόμενη συμπεριφορά στο παρελθόν· το would όχι για καταστάσεις">repeated past behaviour; would not for states</span></p>
+            <p><strong>Past Perfect / Past Perfect Progressive</strong> - <span class="fn-text" data-en="earlier past cause, result, or duration before another past point" data-el="προγενέστερη αιτία, αποτέλεσμα ή διάρκεια πριν από άλλο χρονικό σημείο στο παρελθόν">earlier past cause, result, or duration before another past point</span></p>
+          </div>
+        </div>
+        <div class="timeline-card">
+          <h3>Future Time</h3>
+          <div class="line"><div class="fill" style="width:100%; background:linear-gradient(90deg,#fff3d6,#ffcf99);"></div></div>
+          <div class="line-labels"><span>prediction / decision</span><span>plan / arrangement</span><span>completion by future time</span></div>
+          <div class="mini-note" style="margin-top:12px;">
+            <p><strong>Will</strong> - <span class="fn-text" data-en="prediction, promise, offer, instant decision" data-el="πρόβλεψη, υπόσχεση, προσφορά, στιγμιαία απόφαση">prediction, promise, offer, instant decision</span></p>
+            <p><strong>Going to</strong> - <span class="fn-text" data-en="prior intention, evidence-based prediction" data-el="πρότερη πρόθεση, πρόβλεψη βασισμένη σε ενδείξεις">prior intention, evidence-based prediction</span></p>
+            <p><strong>Present Progressive</strong> - <span class="fn-text" data-en="fixed arrangement in the future" data-el="σταθερή μελλοντική διευθέτηση">fixed arrangement in the future</span></p>
+            <p><strong>Future Progressive / Future Perfect</strong> - <span class="fn-text" data-en="action in progress later, or completed by a future time" data-el="ενέργεια σε εξέλιξη αργότερα ή ολοκληρωμένη μέχρι μια μελλοντική χρονική στιγμή">action in progress later, or completed by a future time</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top:12px;">
+        <div class="card">
+          <h3>Quick decision guide</h3>
+          <p>Ask first: <strong>What time is this about?</strong> Then ask: <strong>What meaning do I want to show?</strong> Choose between habit, action in progress, result, duration, background action, earlier past, intention, arrangement, or completion.</p>
+        </div>
+        <div class="card">
+          <h3>Final watch outs</h3>
+          <p>State verbs are rarely progressive, <strong>would</strong> does not describe habitual states, and after <strong>when / if / before / after / until</strong> English normally uses a present form, not <strong>will</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="global-footer">Panagiotis Domvros, English &amp; Drama Teacher, Principal of 1st Middle School of Pylea</div>
+
+    <div class="nav">
+      <button class="nav-btn" onclick="changeSlide(-1)">← Back</button>
+      <div class="nav-center" id="dots" aria-live="polite"></div>
+      <button class="nav-btn" onclick="changeSlide(1)">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dotsWrap = document.getElementById('dots');
+    let currentSlide = 0;
+
+    function setScenarioCardState(card, shouldShow) {
+      if (!card) return;
+      const reveal = card.querySelector('.reveal');
+      const btn = card.querySelector('.reveal-btn');
+      if (!reveal) return;
+      reveal.classList.toggle('show', shouldShow);
+      if (btn) btn.textContent = shouldShow ? 'Hide answer' : 'Flip card';
+    }
+
+    function toggleScenarioCard(card) {
+      if (!card) return;
+      const reveal = card.querySelector('.reveal');
+      if (!reveal) return;
+      setScenarioCardState(card, !reveal.classList.contains('show'));
+    }
+
+    function toggleReveal(btn) {
+      const evt = window.event;
+      if (evt) evt.stopPropagation();
+      const card = btn.closest('.scenario-card');
+      if (card) {
+        toggleScenarioCard(card);
+        return;
+      }
+      const reveal = btn.nextElementSibling;
+      if (!reveal) return;
+      reveal.classList.toggle('show');
+      btn.textContent = reveal.classList.contains('show') ? 'Hide answer' : 'Flip card';
+    }
+
+    function shufflePracticeCards(gridId) {
+      const grid = document.getElementById(gridId);
+      if (!grid) return;
+      const cards = Array.from(grid.children);
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
+      }
+      cards.forEach(card => {
+        setScenarioCardState(card, false);
+        grid.appendChild(card);
+      });
+    }
+
+    function toggleGreekFunctions(btn) {
+      const slide = btn.closest('.slide');
+      if (!slide) return;
+      const showGreek = btn.getAttribute('aria-pressed') !== 'true';
+      slide.querySelectorAll('.fn-text').forEach(span => {
+        span.textContent = showGreek ? span.dataset.el : span.dataset.en;
+      });
+      btn.setAttribute('aria-pressed', showGreek ? 'true' : 'false');
+      btn.textContent = showGreek ? 'Show functions in English' : 'Show functions in Greek';
+    }
+
+    document.querySelectorAll('.scenario-card').forEach(card => {
+      card.addEventListener('click', () => toggleScenarioCard(card));
+    });
+
+    function renderCounter() {
+      dotsWrap.textContent = `${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function showSlide(index) {
+      currentSlide = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === currentSlide));
+      renderCounter();
+      slides[currentSlide].scrollTop = 0;
+      window.scrollTo(0, 0);
+    }
+
+    function changeSlide(step) {
+      showSlide(currentSlide + step);
+    }
+
+    renderCounter();
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') changeSlide(1);
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+    });
+
+    let startX = null;
+    document.addEventListener('touchstart', (e) => {
+      startX = e.changedTouches[0].clientX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      if (startX === null) return;
+      const endX = e.changedTouches[0].clientX;
+      const diff = endX - startX;
+      if (Math.abs(diff) > 60) {
+        if (diff < 0) changeSlide(1);
+        else changeSlide(-1);
+      }
+      startX = null;
+    }, { passive: true });
+  </script>
+</body>
+</html>
